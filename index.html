@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Curso Senai - Eventos</title>
+    <link rel="stylesheet" type="text/css" href="assets/bootstrap/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="assets/css/eventos.css">
+</head>
+
+<body>
+    <div class="image-container set-full-height">
+        <div class="row align-items-start">
+            <div class="col-1"></div>
+            <div class="col-3">
+                <div class="wizard-container" id="formPalestrante">
+                    <div>
+                        <h5>CADASTRO DE PALESTRANTES</h5>
+                    </div>
+                    <div class="row">
+                        <label for="nomePalestrante" class="form-label">Nome do palestrante:</label>
+                        <input type="text" class="form-control" id="nomePalestrante">
+                    </div>
+                    <div class="row" id="linhaBotao">
+                        <button id="incluiPalestrante" type="submit" class="btn btn-primary">Incluir</button>
+                    </div>
+                </div>
+                <div class="row">
+                    <table id="tabelaPalestrantes">
+                        <thead>
+                            <tr>
+                                <th class="tabelaTitulo" colspan="3">Palestrantes</th>
+                            </tr>
+                            <tr>
+                                <th id="tabelaPalestranteItem">Nome</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>    
+                </div>
+            </div>
+            <div class="col-1"></div>
+            <div class="col-3">
+                <div class="wizard-container" id="formEvento">
+                    <div>
+                        <h5>CADASTRO DE EVENTOS</h5>
+                    </div>
+                    <div class="row">
+                        <label for="nomeEvento" class="form-label">Nome do evento:</label>
+                        <input type="text" class="form-control" id="nomeEvento">
+                    </div>
+                    <div class="row">
+                        <label for="dataEvento" class="form-label">Data do evento:</label>
+                        <input type="date" class="form-control" id="dataEvento">
+                    </div>
+                    <div class="row">
+                        <label for="eventoPalestrante" class="form-label">Nome do palestrante:</label>
+                        <select class="form-control" id="eventoPalestrante"></select>
+                    </div>
+                    <div class="row" id="linhaBotao">
+                        <button id="incluiEvento" type="submit" class="btn btn-primary">Incluir</button>
+                    </div>
+                    <div class="row">
+                        <table id="tabelaEventos">
+                            <thead>
+                                <tr>
+                                    <th class="tabelaTitulo" colspan="3">Eventos</th>
+                                </tr>
+                                <tr>
+                                    <th id="tabelaEventosNome">Nome</th>
+                                    <th id="tabelaEventosPalestrante">Palestrante</th>
+                                    <th id="tabelaEventosData">Data</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>    
+                    </div>
+                </div>
+            </div>
+            <div class="col-1"></div>
+            <div class="col-2">
+                <div class="wizard-container" id="formParticipante">
+                    <div>
+                        <h5>INSCREVA-SE</h5>
+                    </div>
+                    <div class="row">
+                        <label for="nomeParticipante" class="form-label">Digite seu nome:</label>
+                        <input type="text" class="form-control" id="nomeParticipante">
+                    </div>
+                    <div class="row">
+                        <label for="dataNascimento" class="form-label">Data de nascimento:</label>
+                        <input type="date" class="form-control" id="dataNascimento">
+                    </div>
+                    <div class="row" id="linhaBotao">
+                        <button id="incluiParticipante" type="submit" class="btn btn-primary" disabled>Incluir</button>
+                    </div>
+                    <div class="row">
+                        <table id="tabelaParticipantes">
+                            <thead>
+                                <tr>
+                                    <th class="tabelaTitulo" colspan="3">Participantes</th>
+                                </tr>
+                                <tr>
+                                    <th id="tabelaParticipantesNome">Nome</th>
+                                    <th id="tabelaParticipantesNascimento">Palestra</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>    
+                    </div>
+                </div>
+            </div>
+            <div class="col-1"></div>
+        </div>
+    </div>
+</body>
+<script src="assets/js/jquery-3.6.0.min.js" type="text/javascript"></script>
+<script>
+
+    var palestrantes    = []
+    var eventos         = []
+    var Participantes   = []
+
+    $("#incluiPalestrante").click(function() {
+        var nomePalestrante = $("#nomePalestrante").val()
+
+        linhaTabela = "<tr><td>" + nomePalestrante + "</td></tr>"
+        corpoTabela = $("#tabelaPalestrantes tbody")
+        corpoTabela.append(linhaTabela)
+        alert("Incluido Participante " + nomePalestrante)
+
+        palestrantes.push(nomePalestrante)
+
+        var select2 = $("#eventoPalestrante");
+        select2.append('<option id="' + nomePalestrante + '">' + nomePalestrante + '</option>');
+    })
+
+    $("#incluiEvento").click(function() {
+        var dataAtual  = new Date
+        var nomeEvento = $("#nomeEvento").val()
+        var dataEvento = $("#dataEvento").val()
+        var eventoPalestrante = $("#eventoPalestrante").val()
+
+        console.log(dataAtual)
+
+        linhaTabela = "<tr><td>" + nomeEvento + "</td><td>" + eventoPalestrante + "</td><td>" + dataEvento + "</td></tr>"
+        corpoTabela = $("#tabelaEventos tbody")
+        corpoTabela.append(linhaTabela)
+        alert("Incluido Evento: " + nomeEvento + " Palestrante:" + eventoPalestrante + " Data:" + dataEvento)
+    })
+</script>
+
+</html>
