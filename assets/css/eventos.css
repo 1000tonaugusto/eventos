@@ -12,3 +12,7 @@ button {
     font-size: 22px;
     text-align: center;
 }
+
+table {
+    width: 100%;
+}

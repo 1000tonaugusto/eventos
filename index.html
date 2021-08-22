@@ -13,6 +13,7 @@
         <div class="row align-items-start">
             <div class="col-1"></div>
             <div class="col-3">
+                <!-- Formulario de palestrantes -->
                 <div class="wizard-container" id="formPalestrante">
                     <div>
                         <h5>CADASTRO DE PALESTRANTES</h5>
@@ -42,6 +43,7 @@
             </div>
             <div class="col-1"></div>
             <div class="col-3">
+                <!-- Formulario de eventos -->
                 <div class="wizard-container" id="formEvento">
                     <div>
                         <h5>CADASTRO DE EVENTOS</h5>
@@ -81,9 +83,10 @@
             </div>
             <div class="col-1"></div>
             <div class="col-2">
+                <!-- Formulario de inscrição para os participantes -->
                 <div class="wizard-container" id="formParticipante">
                     <div>
-                        <h5>INSCREVA-SE</h5>
+                        <h5>INSCREVA-SE (Limite 10 Part.)</h5>
                     </div>
                     <div class="row">
                         <label for="nomeParticipante" class="form-label">Digite seu nome:</label>
@@ -93,8 +96,12 @@
                         <label for="dataNascimento" class="form-label">Data de nascimento:</label>
                         <input type="date" class="form-control" id="dataNascimento">
                     </div>
+                    <div class="row">
+                        <label for="participanteEvento" class="form-label">Escolha o evento:</label>
+                        <select class="form-control" id="participanteEvento"></select>
+                    </div>
                     <div class="row" id="linhaBotao">
-                        <button id="incluiParticipante" type="submit" class="btn btn-primary" disabled>Incluir</button>
+                        <button id="incluiParticipante" type="submit" class="btn btn-primary">Incluir</button>
                     </div>
                     <div class="row">
                         <table id="tabelaParticipantes">
@@ -115,41 +122,167 @@
             </div>
             <div class="col-1"></div>
         </div>
+        <div class="row align-items-end">
+            <div class="col-1"></div>
+            <div class="col-3">
+                <div class="row"><h5>Lista Eventos (Falta desenvolver)</h5></div>
+            </div>
+        </div>
     </div>
 </body>
 <script src="assets/js/jquery-3.6.0.min.js" type="text/javascript"></script>
+<script src="assets/sweetalert/sweetalert2.all.min.js" type="text/javascript"></script>
 <script>
+    // Variaval global com data atual
+    var dataAtual = new Date().toISOString().substring(0,10)
 
+    // Variavel global com quantidade de inscritos
+    var qtdParticipante = 0
+
+    // Variaveis globais para armazenar as informações inseridas nos formulario HTML
     var palestrantes    = []
     var eventos         = []
-    var Participantes   = []
+    var participantes   = []
 
+    // Função para inclusão de palestrantes
     $("#incluiPalestrante").click(function() {
+        
+        // Carrega variavel com a informação do formulario HTML
         var nomePalestrante = $("#nomePalestrante").val()
 
-        linhaTabela = "<tr><td>" + nomePalestrante + "</td></tr>"
-        corpoTabela = $("#tabelaPalestrantes tbody")
-        corpoTabela.append(linhaTabela)
-        alert("Incluido Participante " + nomePalestrante)
+        var tamStringNomePalestrante = $("#nomePalestrante").val().length
+        if (tamStringNomePalestrante <= 0) {
+            $("#nomePalestrante").focus()
+            Swal.fire({
+                icon: 'error',
+                text: 'Informe nome do palestrante'
+            })
+        } else {
+            // Formata a linha da tabela de palestrantes
+            linhaTabela = "<tr><td>" + nomePalestrante + "</td></tr>"
 
-        palestrantes.push(nomePalestrante)
+            // Inclui uma linha na tabela de palestrantes
+            corpoTabela = $("#tabelaPalestrantes tbody")
+            corpoTabela.append(linhaTabela)
 
-        var select2 = $("#eventoPalestrante");
-        select2.append('<option id="' + nomePalestrante + '">' + nomePalestrante + '</option>');
+            // Mensagem de inclusão do palestrantes
+            Swal.fire({
+                icon: 'success',
+                text: 'Incluido palestante: ' + nomePalestrante
+            })
+
+            // Inclui o palestrante ao array
+            palestrantes.push(nomePalestrante)
+
+            // Inclui ao select no cadastro de evento, o nome do palestrante
+            var selectPalestrante = $("#eventoPalestrante")
+            selectPalestrante.append('<option id="' + nomePalestrante + '">' + nomePalestrante + '</option>');
+        }
     })
 
+    // Função para inclusão de eventos
     $("#incluiEvento").click(function() {
-        var dataAtual  = new Date
+
+        // Carrega variaveis com a informação do formulario HTML
         var nomeEvento = $("#nomeEvento").val()
         var dataEvento = $("#dataEvento").val()
         var eventoPalestrante = $("#eventoPalestrante").val()
 
-        console.log(dataAtual)
+        // Testa se a data do evento é valida
+        if (dataEvento<=dataAtual) {
+            Swal.fire({
+                icon: 'error',
+                text: "Data para evento invalida"
+            })
 
-        linhaTabela = "<tr><td>" + nomeEvento + "</td><td>" + eventoPalestrante + "</td><td>" + dataEvento + "</td></tr>"
-        corpoTabela = $("#tabelaEventos tbody")
-        corpoTabela.append(linhaTabela)
-        alert("Incluido Evento: " + nomeEvento + " Palestrante:" + eventoPalestrante + " Data:" + dataEvento)
+            // Coloca o cursor no vampo de data de evento
+            $("#dataEvento").focus()
+        } else {
+
+            var tamStringNomeEvento = $("#nomeEvento").val().length
+
+            // Testa de foi informado o nome do evento
+            if (tamStringNomeEvento<=0) {
+                $("#nomeEvento").focus()
+                Swal.fire({
+                    icon: 'error',
+                    text: "Informe o nome do Evento"
+                })
+            } else {
+           
+                // Formata a linha da tabela de eventos
+                linhaTabela = "<tr><td>" + nomeEvento + "</td><td>" + eventoPalestrante + "</td><td>" + dataEvento + "</td></tr>"
+
+                // Inclui uma linha na tabela de eventos
+                corpoTabela = $("#tabelaEventos tbody")
+                corpoTabela.append(linhaTabela)
+
+                // Mensagem de inclusão de eventos
+                Swal.fire({
+                    icon: 'success',
+                    text: "Incluido Evento: " + nomeEvento + " Palestrante: " + eventoPalestrante + " Data: " + dataEvento
+                })
+
+                // Inclui o evento no array
+                eventos.push(nomeEvento)
+
+                // Inclui no select de inscrição, o nome do evento
+                var selectEvento = $("#participanteEvento");
+                selectEvento.append('<option id="' + nomeEvento + '">' + nomeEvento + '</option>');
+            }
+ 
+        }
+    })
+
+    // Função para inclusão de participantes
+    $("#incluiParticipante").click(function() {
+
+        // Carrega variaveis com a informação do formulario HTML
+        var nomeParticipante = $("#nomeParticipante").val()
+        var nomeEvento = $("#participanteEvento").val()
+        var dataNascimento = $("#dataNascimento").val()
+
+        // Pega o ano atual e de nascimento do formulario HTML
+        var anoAtual      = Math.floor(dataAtual.substring(0,4))
+        var anoNascimento = Math.floor(dataNascimento.substring(0,4))
+        
+        // Testa se a pessoa tem idade maior ou igual que 18 anos
+        if (anoAtual-anoNascimento >=18 ) {
+
+            qtdParticipante = qtdParticipante+1
+
+            if (qtdParticipante<=10) {
+                // Formata a linha para a tabela de participante
+                linhaTabela = "<tr><td>" + nomeParticipante + "</td><td>" + nomeEvento + "</td></tr>"
+
+                // Inclui uma linha na tabela de participante
+                corpoTabela = $("#tabelaParticipantes tbody")
+                corpoTabela.append(linhaTabela)
+
+                // Mensagem de inclusão do participante
+                Swal.fire({
+                    icon: 'success',
+                    text: "Você se inscreveu no evento: " + nomeEvento
+                })
+                
+                // Inclui o participante no array
+                participantes.push(participantes)
+            } else {
+                $("#incluiParticipante").attr("disabled", true)
+                Swal.fire({
+                    icon: 'error', 
+                    text: "Quantidade de participantes excedido"
+                })
+            }
+        } else {
+            $("#dataNascimento").focus()
+            
+            // Mensagem de proibido inscrição
+            Swal.fire({
+                icon: 'error',
+                text: "Caia fora poquemon"
+            })
+        }
     })
 </script>
 
